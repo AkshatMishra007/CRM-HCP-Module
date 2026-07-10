@@ -282,16 +282,23 @@ function InteractionForm() {
       } else {
         await logInteraction(payload);
         dispatch(
-          showToast({
+        showToast({
             message: "Interaction saved successfully!",
             type: "success",
           }),
         );
       }
 
-      const currentHcp = interaction.selectedHcp;
-      dispatch(resetInteraction());
-      fetchHistory(currentHcp.id);
+const currentHcp = interaction.selectedHcp;
+
+const ok = window.confirm(
+  "Interaction saved successfully!\n\nClick OK to continue."
+);
+
+if (ok) {
+  dispatch(resetInteraction());
+  fetchHistory(currentHcp.id);
+}
     } catch (error) {
       dispatch(
         showToast({
