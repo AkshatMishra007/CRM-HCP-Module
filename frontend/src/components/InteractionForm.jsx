@@ -252,7 +252,6 @@ function InteractionForm() {
       return;
     }
     setIsSaving(true);
-
     const payload = buildInteractionPayload();
     // Synchronize HCP master data with AI extraction
     if (
@@ -281,10 +280,6 @@ function InteractionForm() {
           }),
         );
       } else {
-        console.log("=== SAVE PAYLOAD ===");
-        console.log(payload);
-
-        console.log("Selected HCP:", interaction.selectedHcp);
         await logInteraction(payload);
         dispatch(
           showToast({

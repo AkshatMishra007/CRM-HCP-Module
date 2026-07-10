@@ -6,12 +6,11 @@ An intelligent, AI-first Customer Relationship Management (CRM) log interaction 
 
 ## 🚀 Key Features
 
-* **AI Chat Assistant (Groq & LLaMA 3.3)**: Natural language chat interface that parses unstructured representative notes and extracts detailed structured interaction attributes.
-* **LangGraph Pipeline Workflow**: Leverages a structured agent graph with distinct nodes for extraction, interaction summarization, and next-action suggestions.
-* **Reactive Autocomplete HCP Search**: Debounced database query component that matches name, hospital, or specialization, automatically selecting the HCP when a unique match is returned.
-* **Dynamic Location Fallback**: Prioritizes AI extracted locations, manually input values, and the doctor's primary hospital in a unified priority waterfall.
-* **Nested Entity Sync (Delete-and-Reinsert)**: Atomically logs and updates nested child entities such as distributed samples, shared materials, and suggestions in single database transactions.
-* **Automatic Quantity Parsing**: Intelligent text parser that extracts sample quantities and product names from statements like `"5 samples of CardioX 10 mg"`.
+* **Intelligent LangGraph Router Agent (Groq & LLaMA 3.3)**: Natural language chat interface that dynamically classifies user inputs into specific intents (`log`, `edit`, `history`, `summary`, `next_action`, or `unknown`) using LLaMA-3.3, routing them to specialized nodes using conditional StateGraph edges.
+* **Direct Database ORM Node Operations**: Agent nodes fetch doctor profiles, historical logs, and child lists directly from the database using SQLAlchemy ORM `SessionLocal` to implement live edits, search history lookup, and context-rich suggestions.
+* **Reactive Autocomplete HCP Search**: Debounced database query component that matches name, hospital, or specialty, automatically selecting the HCP when a unique match is returned.
+* **Dynamic Location Fallback & Sentiment Normalization**: Prioritizes AI extracted locations, manually input values, and the doctor's primary hospital in a priority waterfall, while standardizing sentiments into `Positive`, `Negative`, and `Neutral`.
+* **Enhanced Markdown Chat Formatting**: History and next-action recommendation nodes format their output dynamically as markdown layout templates with sentiment markers and structured bullet points directly in the chat UI.
 * **Redux Global State Management**: Centralized store tracking form data, toast notifications, active editing ID, chat histories, and selected HCP context.
 
 ---
@@ -54,18 +53,32 @@ graph TD
 
 ### LangGraph Workflow
 
-The AI agent compiles into a linear state graph consisting of three nodes:
+The AI agent compiles into an intent-aware conditional StateGraph:
 
-1. **Extract Node (`extract`)**: Uses `ChatGroq` LLaMA 3.3 to extract fields (name, location, materials, samples, sentiment, outcomes) into a strict JSON schema.
-2. **Summary Node (`summary`)**: Generates a concise 2-3 sentence overview of the interaction.
-3. **Suggestions Node (`suggestions`)**: Suggests 3 actionable, structured follow-up next steps.
+1. **Detect Intent Node (`detect_intent`)**: Uses LLaMA 3.3 to classify the input message.
+2. **Conditional Edge Router (`route_intent`)**: Routes dynamically to one of the five specialized tools or default handler.
+3. **Log Interaction Node (`log_interaction`)**: Runs structured data extraction, summary, and action items sequentially.
+4. **Edit Interaction Node (`edit_interaction`)**: Extracts doctor name and changes, updates modified columns/lists, and commits directly.
+5. **Search History Node (`search_history`)**: Lists past interactions formatted in a clean markdown list.
+6. **Generate Summary Node (`generate_summary`)**: Analyzes total database interaction history to write an overall relationship report.
+7. **Suggest Next Action Node (`suggest_next_action`)**: Suggests 3-5 next meeting steps and sample distributions based on history.
 
 ```mermaid
-graph LR
-    START((START)) --> Extract[extract]
-    Extract --> Summary[summary]
-    Summary --> Suggestions[suggestions]
-    Suggestions --> END((END))
+graph TD
+    START((START)) --> detect_intent[detect_intent]
+    detect_intent -->|route_intent| log_interaction[log_interaction]
+    detect_intent -->|route_intent| edit_interaction[edit_interaction]
+    detect_intent -->|route_intent| search_history[search_history]
+    detect_intent -->|route_intent| generate_summary[generate_summary]
+    detect_intent -->|route_intent| suggest_next_action[suggest_next_action]
+    detect_intent -->|route_intent| handle_unknown[handle_unknown]
+    
+    log_interaction --> END((END))
+    edit_interaction --> END((END))
+    search_history --> END((END))
+    generate_summary --> END((END))
+    suggest_next_action --> END((END))
+    handle_unknown --> END((END))
 ```
 
 ---

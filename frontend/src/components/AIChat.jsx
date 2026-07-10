@@ -37,7 +37,6 @@ function AIChat() {
       const ai = response.data;
 
       const data = ai.extracted_data;
-      console.log("Date from AI:", data.interaction_date);
       // Populate extracted doctor name into Redux hcpName
       dispatch(
         updateField({
@@ -187,13 +186,29 @@ function AIChat() {
       );
 
       // Save AI suggestions
-      dispatch(setAiSuggestions(ai.suggestions));
-      dispatch(setAiSummary(ai.summary));
-      // Show AI summary in chat
+      dispatch(setAiSuggestions(ai.suggestions || []));
+      dispatch(setAiSummary(ai.summary || ""));
+
+      // Build assistant message
+      let assistantResponse = ai.summary || "";
+
+      if (
+        ai.suggestions &&
+        Array.isArray(ai.suggestions) &&
+        ai.suggestions.length > 0
+      ) {
+        assistantResponse += "\n\n🎯 Recommended Next Actions\n\n";
+
+        ai.suggestions.forEach((item, index) => {
+          assistantResponse += `${index + 1}. ${item}\n`;
+        });
+      }
+     
+      // Add assistant message to chat
       dispatch(
         addChatMessage({
           sender: "assistant",
-          text: ai.summary,
+          text: assistantResponse,
         }),
       );
     } catch (error) {
