@@ -1,0 +1,36 @@
+Prompt 1: Log New Interaction
+
+I met Dr. Amit Sharma today at 3:30 pm Apollo Hospital.
+We discussed CardioX for hypertension patients.
+The doctor was interested in the latest clinical study and wanted to know about long-term efficacy.
+I shared the latest product brochure.
+I distributed 5 CardioX samples.
+The discussion was positive.
+We agreed to meet again next Tuesday.
+
+================================================================================================================================
+
+Prompt 2:Search Interaction History
+
+Show me the complete interaction history of Dr. Amit Sharma.
+
+================================================================================================================================
+
+Prompt 3: Edit Existing Interaction
+
+Update my latest interaction with Dr. Amit Sharma.
+Change the meeting location to AIIMS Delhi.
+Change the sentiment to Neutral.
+Update the follow-up action to Send the latest product brochure after one week.
+
+================================================================================================================================
+
+Prompt 4: Relationship Summary 
+
+Give me an overall summary of my relationship with Dr. Amit Sharma.
+
+================================================================================================================================
+
+Prompt 5: Next Best Action 
+
+Suggest the next best actions for Dr. Amit Sharma.

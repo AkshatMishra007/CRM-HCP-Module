@@ -16,6 +16,18 @@ from app.models.sample import Sample
 from app.models.ai_suggestion import AISuggestion
 
 
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+
+env_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(env_path)
+
+print("Loaded:", env_path)
+print("API KEY:", os.getenv("GROQ_API_KEY"))
+
+
+
 def normalize_interaction_type(itype: str) -> str:
     """
     Standardize the interaction type.

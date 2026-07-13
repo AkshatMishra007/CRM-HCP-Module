@@ -7,12 +7,6 @@ class GraphState(TypedDict):
 
     extracted_data: dict
 
-    history: list
-
-    interaction: dict
-
     summary: str
 
     suggestions: list[str]
-
-    response: str

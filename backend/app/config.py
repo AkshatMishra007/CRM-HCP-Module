@@ -1,4 +1,12 @@
-from pydantic_settings import BaseSettings,SettingsConfigDict
+from pathlib import Path
+
+from dotenv import load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+for env_path in (BASE_DIR / ".env", BASE_DIR / "backend" / ".env"):
+    if env_path.exists():
+        load_dotenv(env_path, override=False)
 
 
 class Settings(BaseSettings):
@@ -11,8 +19,10 @@ class Settings(BaseSettings):
     GROQ_API_KEY: str = ""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="ignore"
+        env_file=str(BASE_DIR / ".env"),
+        env_file_encoding="utf-8",
+        extra="ignore",
     )
+
 
 settings = Settings()
