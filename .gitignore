@@ -28,3 +28,8 @@ Thumbs.db
 *.swp
 *.swo
 test_logs
+*.tmp
+*.bak
+.coverage*
+pytestdebug.log*
+backend/test_app.py
