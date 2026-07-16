@@ -18,6 +18,8 @@ class Settings(BaseSettings):
 
     GROQ_API_KEY: str = ""
 
+    CORS_ORIGINS: str = "http://localhost:5173"
+
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
         env_file_encoding="utf-8",

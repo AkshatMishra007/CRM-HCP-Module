@@ -22,9 +22,7 @@ import os
 
 env_path = Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(env_path)
-
-print("Loaded:", env_path)
-print("API KEY:", os.getenv("GROQ_API_KEY"))
+# Environment variables loaded dynamically
 
 
 
@@ -438,11 +436,14 @@ def edit_interaction(state: GraphState) -> Dict[str, Any]:
             "suggestions": [sug["suggestion"] for sug in serialized["ai_suggestions"]]
         }
                 
-    except Exception:
+    except Exception as e:
         db.rollback()
+        import traceback
+        print(f"Error in edit_interaction: {e}")
+        traceback.print_exc()
         return {
             "extracted_data": {},
-            "summary": "Doctor not found.",
+            "summary": f"Error updating interaction: {str(e)}",
             "suggestions": []
         }
     finally:
