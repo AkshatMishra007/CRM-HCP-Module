@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     GROQ_API_KEY: str = ""
 
-    CORS_ORIGINS: str = "http://localhost:5173"
+    CORS_ORIGINS: str = "http://localhost:5173,https://crm-hcp-module-chi.vercel.app"
 
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
