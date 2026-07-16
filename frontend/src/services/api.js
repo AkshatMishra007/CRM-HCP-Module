@@ -3,7 +3,7 @@ import axios from "axios";
 const baseURL =
   import.meta.env.VITE_API_BASE_URL ||
   import.meta.env.VITE_API_URL ||
-  (typeof window !== "undefined" ? window.location.origin : "http://localhost:8000");
+  "http://localhost:8000";
 
 console.log("[API] using baseURL:", baseURL);
 

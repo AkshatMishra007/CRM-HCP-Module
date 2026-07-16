@@ -75,7 +75,7 @@ function InteractionForm() {
     }
 
     const val = interaction.hcpName;
-    if (!val || val.trim().length <= 1) {
+    if (!val) {
       setSearchResults([]);
       setShowDropdown(false);
       return;
@@ -95,11 +95,16 @@ function InteractionForm() {
 
       try {
         const res = await searchHCP(val, controller.signal);
-        const matches = res.data || [];
+        const matches = Array.isArray(res.data) ? res.data : [];
         setSearchResults(matches);
 
-        // If a unique match exists (matches.length === 1), select it automatically!
-        if (matches.length === 1) {
+        // Only auto-select when the typed query exactly matches a single HCP name.
+        const normalizedQuery = val.trim().toLowerCase();
+        const exactMatch =
+          matches.length === 1 &&
+          matches[0].name.trim().toLowerCase() === normalizedQuery;
+
+        if (exactMatch) {
           dispatch(setSelectedHcp(matches[0]));
           setShowDropdown(false);
         } else {
