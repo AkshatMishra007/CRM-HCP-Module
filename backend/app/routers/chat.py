@@ -9,7 +9,7 @@ router = APIRouter(
     tags=["AI Chat"]
 )
 
-@router.post("/", response_model=ChatResponse)
+@router.post("", response_model=ChatResponse)
 def chat(request: ChatRequest):
 
     result = graph.invoke(
